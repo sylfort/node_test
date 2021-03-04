@@ -1,0 +1,39 @@
+version: "3.5"
+services:
+  runa-api:
+    container_name: runa-api
+    build: .
+    restart: "no"
+    volumes:
+      - ".:/usr/src/app"
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+
+  db:
+    container_name: db
+    image: mysql:8.0
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ".data:/var/lib/mysql"
+    ports:
+      - 3307:3306
+    command: --default-authentication-plugin=mysql_native_password
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+      - PMA_ARBITRARY=1
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
+# docker-compose up --build
